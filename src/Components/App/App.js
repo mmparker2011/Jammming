@@ -64,6 +64,14 @@ class App extends React.Component {
   }
 
   render() {
+    verify(term) {
+      if (Spotify.accessToken === null || Spotify.accessToken === '') {
+        Spotify.getAccessToken();
+      }else {
+        console.log('Already Verified');
+        Spotify.search(term);
+      };
+    }
     return (
       <div>
         <h1>Ja<span className="highlight">mmm</span>ing</h1>
