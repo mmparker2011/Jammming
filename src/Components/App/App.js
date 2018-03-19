@@ -29,34 +29,29 @@ class App extends React.Component {
   }
 
   savePlaylist() {
-    let trackURIs = [];
-    this.Spotify.savePlaylist(this.state.playlistName, trackURIs).then(() => {
+    let trackURIs = this.state.playlistTracks.map(track => track.uri);
+    Spotify.savePlaylist(this.state.playlistName, trackURIs).then(() => {
       this.setState({
         playlistName: 'New Playlist',
+        playlistTracks: [],
         searchResults: []
       });
     });
   }
 
   addTrack(track) {
-    console.log("in add track");
-    let newPlaylist = this.state.playlistTracks;
-    console.log(newPlaylist);
-    let inPlaylist = newPlaylist.includes(track);
-    if(!inPlaylist){
-      newPlaylist.push(track);
-      this.setState({
-        playlistTracks: newPlaylist
-      });
-    } else {
-      alert("This track already exists in the playlist!");
+    let tracks = this.state.playlistTracks;
+    if (tracks.find(newTrack => newTrack.id === track.id)) {
+      return;
     }
+    tracks.push(track);
+    this.setState({playlistTracks: tracks});
   }
 
   removeTrack(track) {
-      this.setState({
-        playlistTracks: this.state.playlistTracks.filter(currentTrack => currentTrack.id !== track.id)
-      });
+    let tracks = this.state.playlistTracks;
+    tracks = tracks.filter(currentTrack => currentTrack.id !== track.id);
+    this.setState({playlistTracks: tracks});
   }
 
   updatePlaylistName(name) {
@@ -64,14 +59,6 @@ class App extends React.Component {
   }
 
   render() {
-    verify(term) {
-      if (Spotify.accessToken === null || Spotify.accessToken === '') {
-        Spotify.getAccessToken();
-      }else {
-        console.log('Already Verified');
-        Spotify.search(term);
-      };
-    }
     return (
       <div>
         <h1>Ja<span className="highlight">mmm</span>ing</h1>
