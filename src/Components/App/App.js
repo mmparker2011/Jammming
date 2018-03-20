@@ -40,12 +40,18 @@ class App extends React.Component {
   }
 
   addTrack(track) {
-    let tracks = this.state.playlistTracks;
-    if (tracks.find(newTrack => newTrack.id === track.id)) {
-      return;
+    console.log("in add track");
+    let newPlaylist = this.state.playlistTracks;
+    console.log(newPlaylist);
+    let inPlaylist = newPlaylist.includes(track);
+    if(!inPlaylist){
+      newPlaylist.push(track);
+      this.setState({
+        playlistTracks: newPlaylist
+      });
+    } else {
+      alert("This track already exists in the playlist!");
     }
-    tracks.push(track);
-    this.setState({playlistTracks: tracks});
   }
 
   removeTrack(track) {
